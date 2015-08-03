@@ -28,12 +28,20 @@ namespace JonathanRobbins.AssignTemplates
             {
                 try
                 {
-                    selectedItem.ChangeTemplate(newTemplate);
+                    using (new Sitecore.SecurityModel.SecurityDisabler())
+                    {
+                        selectedItem.Editing.BeginEdit();
+                        selectedItem.ChangeTemplate(newTemplate);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Log.Error(ex.Message, ex, this);
                     throw;
+                }
+                finally
+                {
+                    selectedItem.Editing.EndEdit();
                 }
             }
 
